@@ -14,6 +14,8 @@ export async function GET(_req: Request, { params }: RouteContext<'/og/docs/[...
     title: page.data.title,
     description: page.data.description,
     site: appName,
+    primaryColor: '#0ffd41',
+    primaryTextColor: '#0ffd41',
   });
 }
 

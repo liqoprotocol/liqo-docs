@@ -12,11 +12,26 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://docs.liqo.network'),
   title: {
     default: 'Liqo Docs',
     template: '%s | Liqo Docs',
   },
-  description: 'Documentation for @liqo/sdk — Global Payments Infrastructure for Modern Businesses.',
+  description: 'Documentation for @liqo/sdk — Global Payments Infrastructure for Modern Businesses. Accept payments in fiat, stablecoins, or crypto and settle in the asset you choose, through a single API.',
+  keywords: ['Liqo', 'payments API', 'stablecoin payments', 'Stellar payments', 'checkout SDK', 'fiat on-ramp', 'crypto payments Africa', 'USDC checkout'],
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: 'website',
+    siteName: 'Liqo Docs',
+    title: 'Liqo Docs',
+    description: 'Documentation for @liqo/sdk — Global Payments Infrastructure for Modern Businesses.',
+    url: 'https://docs.liqo.network',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@liqoprotocol',
+    creator: '@liqoprotocol',
+  },
 };
 
 export default function Layout({ children }: LayoutProps<'/'>) {
