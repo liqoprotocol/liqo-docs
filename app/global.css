@@ -2,6 +2,59 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
+/*
+ * Liqo brand tokens - kept in sync with liqo-landing/app/globals.css,
+ * liqo-dashboard, and liqo-checkout (same --color-primary #0FFD41, same
+ * dark background #0A0A0A, same Outfit font). Only fumadocs' own
+ * --color-fd-* variables are overridden here; component classnames are
+ * fumadocs-ui's, not shadcn's, so shadcn variable names don't apply.
+ */
+:root {
+  --color-fd-background: hsl(0, 0%, 100%);
+  --color-fd-foreground: hsl(222, 84%, 5%);
+  --color-fd-muted: hsl(210, 40%, 96%);
+  --color-fd-muted-foreground: hsl(215, 16%, 47%);
+  --color-fd-popover: hsl(0, 0%, 100%);
+  --color-fd-popover-foreground: hsl(222, 84%, 5%);
+  --color-fd-card: hsl(0, 0%, 100%);
+  --color-fd-card-foreground: hsl(222, 84%, 5%);
+  --color-fd-border: hsl(214, 32%, 91%);
+  --color-fd-primary: #0cc537;
+  --color-fd-primary-foreground: hsl(0, 0%, 4%);
+  --color-fd-secondary: hsl(210, 40%, 96%);
+  --color-fd-secondary-foreground: hsl(222, 47%, 11%);
+  --color-fd-accent: rgba(15, 255, 65, 0.12);
+  --color-fd-accent-foreground: #0a7d24;
+  --color-fd-ring: #0cc537;
+}
+
+.dark {
+  --color-fd-background: hsl(0, 0%, 4%);
+  --color-fd-foreground: hsl(210, 40%, 98%);
+  --color-fd-muted: hsl(0, 0%, 10%);
+  --color-fd-muted-foreground: hsl(215, 20%, 65%);
+  --color-fd-popover: hsl(0, 0%, 6%);
+  --color-fd-popover-foreground: hsl(210, 40%, 96%);
+  --color-fd-card: hsl(0, 0%, 6%);
+  --color-fd-card-foreground: hsl(210, 40%, 98%);
+  --color-fd-border: hsla(0, 0%, 100%, 10%);
+  --color-fd-primary: #0ffd41;
+  --color-fd-primary-foreground: hsl(0, 0%, 4%);
+  --color-fd-secondary: hsl(0, 0%, 12%);
+  --color-fd-secondary-foreground: hsl(210, 40%, 96%);
+  --color-fd-accent: rgba(15, 255, 65, 0.14);
+  --color-fd-accent-foreground: #0ffd41;
+  --color-fd-ring: #0ffd41;
+}
+
+@theme static {
+  --color-fd-success: #0ffd41;
+}
+
+body {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
 html {
   scrollbar-gutter: stable;
 }

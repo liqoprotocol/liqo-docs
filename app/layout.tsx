@@ -1,10 +1,14 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
-import { Inter } from 'next/font/google';
+import { Outfit } from 'next/font/google';
 import type { Metadata } from 'next';
 
-const inter = Inter({
+// Same typeface as liqo-landing/liqo-dashboard/liqo-checkout, exposed the
+// same way (a --font-sans CSS variable consumed in global.css) so the brand
+// stays consistent across every Liqo surface.
+const outfit = Outfit({
   subsets: ['latin'],
+  variable: '--font-sans',
 });
 
 export const metadata: Metadata = {
@@ -17,9 +21,9 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang="en" className={`${outfit.variable} font-sans`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
+        <RootProvider theme={{ defaultTheme: 'dark' }}>{children}</RootProvider>
       </body>
     </html>
   );
