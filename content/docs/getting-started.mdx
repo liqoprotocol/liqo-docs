@@ -8,13 +8,19 @@ description: Accept your first Liqo payment in about five minutes
 - **Node.js 18+**
 - A Liqo API key (start with a **sandbox** key)
 
-## 1. Install
+<Steps>
+<Step>
+
+### Install
 
 ```bash
 npm install @liqo/sdk
 ```
 
-## 2. Initialize the client
+</Step>
+<Step>
+
+### Initialize the client
 
 ```ts
 import { Liqo } from '@liqo/sdk';
@@ -26,7 +32,10 @@ const liqo = new Liqo(process.env.LIQO_API_KEY!, {
 
 Store your key in an environment variable — never hard-code it.
 
-## 3. (Optional) Get a quote
+</Step>
+<Step>
+
+### (Optional) Get a quote
 
 ```ts
 const quote = await liqo.quote({
@@ -39,7 +48,10 @@ const quote = await liqo.quote({
 console.log(`≈ ${quote.estimatedOutput} USDC, fee ${quote.fee}`);
 ```
 
-## 4. Create a payment
+</Step>
+<Step>
+
+### Create a payment
 
 ```ts
 const checkout = await liqo.pay({
@@ -57,7 +69,10 @@ const checkout = await liqo.pay({
 return redirect(checkout.checkoutUrl);
 ```
 
-## 5. Handle the result via webhook
+</Step>
+<Step>
+
+### Handle the result via webhook
 
 Liqo notifies your server when the transaction settles. Verify the signature using the **raw body**:
 
@@ -77,12 +92,18 @@ app.post('/webhooks/liqo', express.raw({ type: 'application/json' }), (req, res)
 
 Configure `webhookSecret` on the client (or pass `secret` to `verify`). See [Webhooks](/docs/webhooks).
 
-## 6. (Optional) Check status directly
+</Step>
+<Step>
+
+### (Optional) Check status directly
 
 ```ts
 const tx = await liqo.transactions.retrieve('tx_123');
 console.log(tx.status);
 ```
+
+</Step>
+</Steps>
 
 ## You're done 🎉
 

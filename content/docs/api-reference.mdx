@@ -36,7 +36,9 @@ Throws `LiqoSdkError` if `apiKey` is empty.
 
 ### `liqo.pay(params: PayParams): Promise<PayResponse>`
 
-Creates a payment via hosted checkout. → `POST /checkout/sessions`. See [Payments](/docs/payments).
+<Endpoint method="POST" path="/checkout/sessions" />
+
+Creates a payment via hosted checkout. See [Payments](/docs/payments).
 
 `PayParams`: `amount`, `fromCurrency`, `toAsset`, `toWallet`, `payerEmail`, `successUrl`, `cancelUrl`, optional `targetChain`, `method`, `sourceCountry`, `expiresInMinutes`, `metadata`, `idempotencyKey`.
 
@@ -48,11 +50,13 @@ Creates a payment via hosted checkout. → `POST /checkout/sessions`. See [Payme
 
 ### `liqo.checkout.sessions.create(params): Promise<CheckoutSessionCreateResponse>`
 
-→ `POST /checkout/sessions`. `params` is `CreateCheckoutSessionRequest & { idempotencyKey?: string }`.
+<Endpoint method="POST" path="/checkout/sessions" />
+
+`params` is `CreateCheckoutSessionRequest & { idempotencyKey?: string }`.
 
 ### `liqo.checkout.sessions.retrieve(token): Promise<PublicCheckoutSession>`
 
-→ `GET /checkout/sessions/:token`.
+<Endpoint method="GET" path="/checkout/sessions/:token" />
 
 See [Checkout](/docs/checkout) for field shapes and statuses.
 
@@ -62,7 +66,9 @@ See [Checkout](/docs/checkout) for field shapes and statuses.
 
 ### `liqo.quote(params: QuoteParams): Promise<QuoteResponse>`
 
-→ `GET /quote`. Read-only.
+<Endpoint method="GET" path="/quote" />
+
+Read-only.
 
 `QuoteParams`: `amount`, `fromCurrency`, `toAsset`, optional `targetChain`.
 
@@ -75,7 +81,9 @@ See [Checkout](/docs/checkout) for field shapes and statuses.
 ### `liqo.transactions.retrieve(id): Promise<TransactionResponse>`
 ### `liqo.getTransaction(id): Promise<TransactionResponse>`
 
-→ `GET /transaction/:id`. `getTransaction` is an alias.
+<Endpoint method="GET" path="/transaction/:id" />
+
+`getTransaction` is an alias.
 
 ### `liqo.waitForCompletion(id, options?): Promise<TransactionResponse>`
 
