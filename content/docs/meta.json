@@ -1,0 +1,22 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "getting-started",
+    "installation",
+    "authentication",
+    "---Guides---",
+    "payments",
+    "checkout",
+    "transactions",
+    "webhooks",
+    "error-handling",
+    "---Reference---",
+    "api-reference",
+    "best-practices",
+    "troubleshooting",
+    "faq",
+    "migration-guide",
+    "versioning"
+  ]
+}
