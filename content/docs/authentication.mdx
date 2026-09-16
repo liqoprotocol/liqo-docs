@@ -25,7 +25,7 @@ const live    = new Liqo(process.env.LIQO_LIVE_KEY!, { environment: 'production'
 | Environment | Default base URL |
 |---|---|
 | `sandbox` (default) | `http://localhost:3000` |
-| `production` | `https://api.liqo.dev` |
+| `production` | `https://api.liqo.network` |
 
 Override with `baseUrl` if you target a hosted staging environment:
 
@@ -33,7 +33,7 @@ Override with `baseUrl` if you target a hosted staging environment:
 const liqo = new Liqo(key, { environment: 'production', baseUrl: 'https://api.your-liqo.example' });
 ```
 
-> **Domains:** the Liqo API and hosted checkout currently use `liqo.dev` (the platform source of truth); the marketing site is `liqo.network`. Confirm your account's base URL in the dashboard.
+> **Domains:** Liqo uses the `liqo.network` domain across the board — API, hosted checkout, dashboard, and marketing site. Confirm your account's base URL in the dashboard.
 
 ## Security rules
 
