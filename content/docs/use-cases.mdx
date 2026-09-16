@@ -1,0 +1,133 @@
+---
+title: Use Cases
+description: Where Liqo fits - real integration patterns with @liqo/sdk
+---
+
+Liqo targets emerging markets first, with a focus on Africa — accepting local fiat and settling in the
+stablecoin or crypto asset you actually want, without you holding reserves or integrating providers
+directly. Below are the integration patterns this maps to most directly, each with a working snippet.
+
+<Cards>
+  <Card title="Cross-border remittances" href="#cross-border-remittances" />
+  <Card title="Creator & freelancer payouts" href="#creator--freelancer-payouts" />
+  <Card title="E-commerce & marketplace checkout" href="#e-commerce--marketplace-checkout" />
+  <Card title="Fiat on-ramp for Web3 apps" href="#fiat-on-ramp-for-web3-apps" />
+  <Card title="Subscription & SaaS billing" href="#subscription--saas-billing" />
+</Cards>
+
+## Cross-border remittances
+
+Someone sending money home wants the recipient to get value fast and cheaply, not wait days for a bank
+wire. Collect the sender's local currency, settle to the recipient's wallet on Stellar in seconds.
+
+```ts
+const checkout = await liqo.pay({
+  amount: 50000,
+  fromCurrency: 'NGN',
+  toAsset: 'USDC',
+  toWallet: recipientWalletAddress,
+  payerEmail: sender.email,
+  targetChain: 'stellar',
+  successUrl: 'https://yourapp.com/success',
+  cancelUrl: 'https://yourapp.com/cancel',
+  metadata: { recipientId: recipient.id },
+});
+```
+
+Pair this with [webhooks](/docs/webhooks) to notify the recipient the moment funds land, instead of making
+them refresh a status page.
+
+## Creator & freelancer payouts
+
+A platform (marketplace, agency, creator tool) owes people in different countries different local
+currencies, but doesn't want to hold reserves of each one or integrate a payout provider per country.
+Each creator's payout becomes one `pay()` call against their own wallet.
+
+```ts
+for (const creator of duePayouts) {
+  await liqo.pay({
+    amount: creator.amountDue,
+    fromCurrency: 'USD', // platform's own settlement currency
+    toAsset: 'USDC',
+    toWallet: creator.walletAddress,
+    payerEmail: platformBillingEmail,
+    successUrl: 'https://yourapp.com/payouts/success',
+    cancelUrl: 'https://yourapp.com/payouts/cancel',
+    idempotencyKey: `payout_${creator.id}_${creator.periodId}`,
+  });
+}
+```
+
+The `idempotencyKey` matters here specifically — a retried payout run should never double-pay a creator.
+
+## E-commerce & marketplace checkout
+
+An online store wants to accept NGN, GHS, ZAR, USD, EUR, or GBP from shoppers without adding a payment
+provider per corridor, and doesn't want to manage crypto directly — [Checkout](/docs/checkout) sessions
+handle the whole collect-and-settle flow behind one hosted page.
+
+```ts
+const checkout = await liqo.checkout.sessions.create({
+  fromAsset: 'GHS',
+  toAsset: 'USDC',
+  amount: cart.totalInGHS,
+  recipientWallet: storeTreasuryWallet,
+  payerEmail: customer.email,
+  method: 'bank_transfer',
+  successUrl: 'https://yourstore.com/orders/thanks',
+  cancelUrl: 'https://yourstore.com/cart',
+  metadata: { orderId: order.id },
+});
+
+redirect(checkout.checkoutUrl);
+```
+
+## Fiat on-ramp for Web3 apps
+
+A dApp or game wants users who don't already hold crypto to fund their in-app wallet with local currency,
+without building a fiat on-ramp integration themselves.
+
+```ts
+const checkout = await liqo.pay({
+  amount: 20000,
+  fromCurrency: 'NGN',
+  toAsset: 'XLM',
+  toWallet: userInAppWallet,
+  payerEmail: user.email,
+  targetChain: 'stellar',
+  successUrl: 'https://yourapp.com/wallet/funded',
+  cancelUrl: 'https://yourapp.com/wallet',
+});
+```
+
+Swap `toAsset`/`targetChain` for `ETH`/`ethereum` or `SOL`/`solana` if that's the chain your app runs on —
+see [Payments](/docs/payments#wallet--chain-matching) for how the SDK validates the wallet against the chain.
+
+## Subscription & SaaS billing
+
+A recurring-billing product wants customers to top up a balance in their own currency and be charged
+from it on each renewal, instead of re-authorizing a card every cycle. Collect the top-up with `pay()`,
+confirm it via [webhook](/docs/webhooks), then debit your own internal ledger on each renewal.
+
+```ts
+// Customer tops up their billing balance
+const checkout = await liqo.pay({
+  amount: 100,
+  fromCurrency: 'USD',
+  toAsset: 'USDC',
+  toWallet: billingTreasuryWallet,
+  payerEmail: customer.email,
+  successUrl: 'https://yourapp.com/billing/success',
+  cancelUrl: 'https://yourapp.com/billing',
+  metadata: { customerId: customer.id, purpose: 'wallet_topup' },
+});
+```
+
+```ts
+// On webhook confirmation, credit the customer's internal balance -
+// this is your own ledger, not something Liqo tracks for you.
+const event = liqo.webhooks.verify({ payload: rawBody, headers: req.headers });
+if (event.event === 'transaction.completed') {
+  await creditCustomerBalance(event.data.metadata.customerId, event.data.amount);
+}
+```

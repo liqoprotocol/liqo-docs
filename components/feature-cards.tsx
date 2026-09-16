@@ -1,8 +1,14 @@
 import Link from 'next/link';
-import { Rocket, Webhook, BookOpenText, ShieldCheck } from 'lucide-react';
+import { Rocket, Webhook, BookOpenText, ShieldCheck, Lightbulb } from 'lucide-react';
 import type { ComponentType } from 'react';
 
 const FEATURES: { title: string; description: string; href: string; icon: ComponentType<{ className?: string }> }[] = [
+  {
+    title: 'Use Cases',
+    description: 'Remittances, payouts, checkout, on-ramps, and billing - with code.',
+    href: '/docs/use-cases',
+    icon: Lightbulb,
+  },
   {
     title: 'Getting Started',
     description: 'Accept your first payment in about five minutes.',
