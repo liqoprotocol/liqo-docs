@@ -1,0 +1,63 @@
+---
+title: Rate Limits
+description: Per-plan request limits, response headers, and how the SDK handles 429s
+---
+
+Liqo rate-limits API requests per API key, scoped to your organization's plan.
+
+## Limits by plan
+
+| Plan | Requests / second |
+|---|---|
+| Developer | 10 |
+| Growth | 50 |
+| Enterprise | 1,000 |
+
+Enterprise limits can be raised further on request — see [Best Practices](/docs/best-practices) for
+production-readiness guidance, or contact sales to discuss a higher ceiling.
+
+## Response headers
+
+Every request returns rate-limit headers, regardless of whether the request was allowed:
+
+| Header | Meaning |
+|---|---|
+| `X-RateLimit-Limit` | Your plan's requests-per-second limit |
+| `X-RateLimit-Remaining` | Requests remaining in the current second |
+
+`@liqo/sdk`'s `liqo.on('response', ...)` event currently exposes `{ method, path, data, attempt }` only,
+not response headers — so these are visible if you inspect the raw HTTP response (e.g. calling the API
+directly, or via your own HTTP client's interceptors), not through the SDK's event API.
+
+## When you exceed the limit
+
+A request over the limit returns `HTTP 429` with the canonical `RATE_LIMITED` error code (see
+[Error Handling](/docs/error-handling#canonical-error-codes)).
+
+```ts
+try {
+  await liqo.quote({ amount: 100, fromCurrency: 'NGN', toAsset: 'USDC' });
+} catch (err) {
+  if (err instanceof LiqoApiError && err.code === 'RATE_LIMITED') {
+    // back off and retry
+  }
+}
+```
+
+**The SDK already retries `429`s for you** — up to `retryAttempts` (default `3`) with exponential
+backoff, so most integrations never need to handle this manually. It only surfaces as an error once
+retries are exhausted. Tune it via the client:
+
+```ts
+const liqo = new Liqo(apiKey, { retryAttempts: 5 });
+```
+
+## Staying under the limit
+
+- **Reuse a single `Liqo` client instance** (see [Best Practices](/docs/best-practices#client-lifecycle))
+  rather than constructing one per request — it doesn't affect the limit itself, but per-request setup
+  overhead compounds quickly at volume.
+- **Prefer [webhooks](/docs/webhooks) over polling** for transaction status — polling in a tight loop is
+  the most common way integrations hit their limit.
+- If you're consistently near the ceiling, that's a signal to upgrade plans rather than add retry logic
+  around it.

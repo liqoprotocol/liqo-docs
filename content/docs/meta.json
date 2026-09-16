@@ -14,10 +14,13 @@
     "error-handling",
     "---Reference---",
     "api-reference",
+    "currencies-assets",
+    "rate-limits",
     "best-practices",
     "troubleshooting",
     "faq",
     "migration-guide",
-    "versioning"
+    "versioning",
+    "changelog"
   ]
 }

@@ -1,0 +1,75 @@
+---
+title: Supported Currencies & Assets
+description: Every fromCurrency, toAsset, and targetChain combination Liqo accepts
+---
+
+Canonical reference for the values `pay()` and `checkout.sessions.create()` accept. These are
+referenced individually across [Payments](/docs/payments), [Checkout](/docs/checkout), and the
+[API Reference](/docs/api-reference) — this page is the single place to look them up.
+
+## Fiat currencies you can collect (`fromCurrency` / `fromAsset`)
+
+| Currency | Code |
+|---|---|
+| Nigerian Naira | `NGN` |
+| Ghanaian Cedi | `GHS` |
+| South African Rand | `ZAR` |
+| US Dollar | `USD` |
+| Euro | `EUR` |
+| British Pound | `GBP` |
+
+## Assets you can settle in (`toAsset`)
+
+| Asset | Code |
+|---|---|
+| USD Coin | `USDC` |
+| Tether | `USDT` |
+| Stellar Lumens | `XLM` |
+| Ether | `ETH` |
+| Bitcoin | `BTC` |
+| Solana | `SOL` |
+
+## Chains (`targetChain`)
+
+| Chain | Value |
+|---|---|
+| Stellar | `stellar` |
+| Solana | `solana` |
+| Ethereum | `ethereum` |
+
+## How asset and chain relate
+
+`targetChain` is optional — if you omit it, the SDK infers it from `toAsset`:
+
+| `toAsset` | Inferred chain |
+|---|---|
+| `SOL` | `solana` |
+| `ETH` | `ethereum` |
+| everything else (`USDC`, `USDT`, `XLM`, `BTC`) | `stellar` |
+
+Set `targetChain` explicitly whenever `toAsset` is chain-ambiguous (e.g. `USDC` exists on more than one
+chain) and you need a specific one.
+
+## Wallet address validation
+
+The SDK validates `toWallet` against the resolved chain **before any network call**, throwing a
+`LiqoSdkError` on mismatch:
+
+| Chain | Expected format |
+|---|---|
+| `stellar` | `G…` — 56 characters |
+| `ethereum` | `0x…` — 40 hex characters |
+| `solana` | base58 — 32–44 characters |
+
+```ts
+await liqo.pay({
+  amount: 15000,
+  fromCurrency: 'NGN',
+  toAsset: 'USDC',
+  toWallet: 'G...RECIPIENT', // must match targetChain's expected format
+  targetChain: 'stellar',
+  // ...
+});
+```
+
+See [Payments](/docs/payments#wallet--chain-matching) for the full validation behavior.
